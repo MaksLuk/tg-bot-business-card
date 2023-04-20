@@ -19,7 +19,7 @@ async def start(message: types.Message):
             text = text.replace('запарило:', 'запарило:<s>').replace('самому</b>', 'самому</b></s>')
         text += line
         if line != '\n':
-            await asyncio.sleep(0.7)
+            await asyncio.sleep(0.5)
             await message.edit_text(text)
     button = InlineKeyboardMarkup().add(InlineKeyboardButton('ОТЛИЧНАЯ ИДЕЯ!', callback_data='continie'))
     await message.edit_text(text, reply_markup=button)
