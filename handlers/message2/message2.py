@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from loader import dp
+from loader import dp, bot
 import emoji
 import html
 
@@ -16,6 +16,7 @@ end_text = [f'На счету: {emoji.emojize(":dollar_banknote:")} {html.escape
 
 @dp.callback_query_handler(lambda c: c.data == 'continie')
 async def click_continue(callback: types.CallbackQuery):
+    await bot.edit_message_reply_markup(chat_id=callback.from_user.id, message_id=callback.message.message_id, reply_markup=None)
     message = await callback.message.answer('⚡')
     await asyncio.sleep(0.7)
     await message.delete()
@@ -36,10 +37,7 @@ async def click_continue(callback: types.CallbackQuery):
     mes = await callback.message.answer(emoji.emojize(":money_with_wings:"))
     await asyncio.sleep(0.7)
     await mes.delete()
-    for i in range(0, 10, 2):
-        await message.edit_text(text + emoji.emojize(":money_with_wings:")*i + emoji.emojize(":white_circle:")*(8-i))
-        await asyncio.sleep(0.3)
-    text += emoji.emojize(":money_with_wings:")*8 + '\n\n'
+    text += 'Шкала прогресса:\n' + emoji.emojize(":large_orange_diamond:") + emoji.emojize(":white_circle:") * 3 + '\n\n'
     for i in end_text:
         text += i
         await asyncio.sleep(0.5)
