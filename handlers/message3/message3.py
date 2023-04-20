@@ -21,7 +21,7 @@ async def click_continue2(callback: types.CallbackQuery, state: FSMContext):
             await asyncio.sleep(0.5)
             await message.edit_text(text)
     
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton('Читать гайд "Продажи на высокий чек"!', callback_data='continie3', url='https://teletype.in/@ottopk/fSCpmr2DKpf'))
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton('Читать гайд "Продажи на высокий чек"!', url='https://teletype.in/@ottopk/fSCpmr2DKpf'))
     await message.edit_text(text, reply_markup=button)
     await asyncio.sleep(90)
     await callback.message.answer('Напиши сюда ключевое слово, которое было в конце статьи, и мы продолжим...')

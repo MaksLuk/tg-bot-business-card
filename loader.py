@@ -7,6 +7,11 @@ import settings
 class States(StatesGroup):
     guide1: State = State()
     question1: State = State()
+    guide2: State = State()
+    guide3: State = State()
+    main_question1: State = State()
+    main_question2: State = State()
+    main_question3: State = State()
 
 
 storage = MemoryStorage()
