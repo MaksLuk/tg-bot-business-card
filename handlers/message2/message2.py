@@ -3,48 +3,58 @@ from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import dp, bot
 import emoji
-import html
 import settings
+from handlers.message2 import message_text
 
-
-with open('./handlers/message2/page2.txt', 'r', encoding='utf-8') as f:
-    page_text = f.readlines()
-
-
-end_text = [f'На счету: {emoji.emojize(":dollar_banknote:")} {html.escape("<")}1000{html.escape(">")} Монет\n\n',
-            f'А теперь расскажу как "намайнить" реальные деньги {emoji.emojize(":money_bag:")*2}']
-    
 
 @dp.callback_query_handler(lambda c: c.data == 'continie')
 async def click_continue(callback: types.CallbackQuery):
+    await asyncio.sleep(settings.del_button_delay)
     await bot.edit_message_reply_markup(chat_id=callback.from_user.id, message_id=callback.message.message_id, reply_markup=None)
+    
     message = await callback.message.answer('⚡')
     await asyncio.sleep(settings.stiker_delay)
     await message.delete()
     await asyncio.sleep(settings.delay_between_stiker_and_message)
-    text = page_text[0]
-    message = await callback.message.answer(text)
-    for i in page_text[1:]:
+
+    text = message_text.text[0]
+    mes = await callback.message.answer(text)
+    await asyncio.sleep(settings.dynamic_delay_many * len(text))
+    
+    await mes.edit_text(text + message_text.text[1])
+    await asyncio.sleep(settings.dynamic_delay * len(message_text.text[1]))
+    text += message_text.text[2]
+    await mes.edit_text(text)
+    await asyncio.sleep(settings.del_delay)
+
+    for i in message_text.text[3:]:
         text += i
-        if i != '\n':
-            await asyncio.sleep(settings.standart_delay)
-            await message.edit_text(text)
-            if i == 'Очередной бот с банальными видео, которые не досматривают до конца?\n':
-                text = text.replace('Очередной', '<s>Очередной').replace('конца?', 'конца?</s>')
-                await asyncio.sleep(settings.standart_delay)
-                await message.edit_text(text)
-    # дальше должны падать монеты
-    text += '\n'
+        await mes.edit_text(text)
+        delay = settings.dynamic_delay_many * len(i) if len(i) > 120 else settings.dynamic_delay * len(i)
+        await asyncio.sleep(delay)
+        
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton('ХОЧУ МОНЕТ', callback_data='get_money'))
+    await mes.edit_reply_markup(reply_markup=button)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'get_money')
+async def get_first_money(callback: types.CallbackQuery):
+    await asyncio.sleep(settings.del_button_delay)
+    await bot.edit_message_reply_markup(chat_id=callback.from_user.id, message_id=callback.message.message_id, reply_markup=None)
+    
     mes = await callback.message.answer(emoji.emojize(":money_with_wings:"))
-    await asyncio.sleep(settings.stiker_delay)
+    await asyncio.sleep(settings.money_stiker_delay)
     await mes.delete()
-    text += 'Шкала прогресса:\n' + emoji.emojize(":large_orange_diamond:") + emoji.emojize(":white_circle:") * 3 + '\n\n'
-    for i in end_text:
+    
+    text = message_text.end_text[0]
+    mes = await callback.message.answer(text)
+    await asyncio.sleep(settings.dynamic_delay * len(text))
+    for i in message_text.end_text[1:]:
         text += i
-        await asyncio.sleep(settings.standart_delay)
-        await message.edit_text(text)
-    await asyncio.sleep(settings.standart_delay)
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton('ПРОДОЛЖИТЬ!', callback_data='continie2'))
-    await message.edit_text(text, reply_markup=button)
+        await mes.edit_text(text)
+        await asyncio.sleep(settings.dynamic_delay * len(i))
+
+    button = InlineKeyboardMarkup().add(InlineKeyboardButton('ПРОДОЛЖИТЬ', callback_data='continie2'))
+    await mes.edit_reply_markup(reply_markup=button)
 
     
