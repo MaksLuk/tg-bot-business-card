@@ -2,6 +2,7 @@ import asyncio
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import dp
+import settings
 
 
 with open('./handlers/message1/page1.txt', 'r', encoding='utf-8') as f:
@@ -19,7 +20,7 @@ async def start(message: types.Message):
             text = text.replace('запарило:', 'запарило:<s>').replace('самому</b>', 'самому</b></s>')
         text += line
         if line != '\n':
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(settings.standart_delay)
             await message.edit_text(text)
     button = InlineKeyboardMarkup().add(InlineKeyboardButton('ОТЛИЧНАЯ ИДЕЯ!', callback_data='continie'))
     await message.edit_text(text, reply_markup=button)

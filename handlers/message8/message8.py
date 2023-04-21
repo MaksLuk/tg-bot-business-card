@@ -1,51 +1,53 @@
 import asyncio
 from aiogram import types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile
 from loader import dp, bot, States
 import emoji
+import html
 from aiogram.dispatcher import FSMContext
 from handlers.message8 import message_text
+import settings
     
 
 @dp.message_handler(state=States.guide3)
 async def messaget_8(message: types.Message, state: FSMContext):
-    await bot.edit_message_reply_markup(chat_id=callback.from_user.id, message_id=callback.message.message_id, reply_markup=None)
+    # await bot.edit_message_reply_markup(chat_id=callback.from_user.id, message_id=callback.message.message_id, reply_markup=None)
     
-    if message.text.strip().lower() != 'масштаб':
+    if message.text.strip().lower() != settings.answer4:
         await message.answer('Поторопился, ввел неверно. Найди ключевое слово в конец статьи и попробуй еще раз')
         return
     text = 'Ты справился с заданием. Добавляю + 2000 Монет\n\n'
     mes = await message.answer(text)
 
     emj = await message.answer(emoji.emojize(":money_with_wings:"))
-    await asyncio.sleep(0.7)
+    await asyncio.sleep(settings.stiker_delay)
     await emj.delete()
 
     text += 'Шкала прогресса:\n' + emoji.emojize(":large_orange_diamond:") * 4
     await mes.edit_text(text)
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(settings.standart_delay)
 
     user_data = await state.get_data()
     new_balance = user_data["balance"] + 2000
     await state.update_data(balance=new_balance)
     text += f'\n\nНа счету всего: {emoji.emojize(":dollar_banknote:")} {html.escape("<")}{new_balance}{html.escape(">")} Монет'
     await mes.edit_text(text)
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(settings.standart_delay)
     text += f'\n\nМонеты ты можешь потратить на создание игровой автоворонки!'
     await mes.edit_text(text)
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(settings.standart_delay)
 
-    # аудио 2
+    await bot.send_audio(chat_id=message.from_user.id, audio=InputFile(settings.audio2))
 
     mes = message_text.offer_text.split('\n')
-    text = mes[0] + '\n
+    text = mes[0] + '\n'
     mes = await message.answer(text)
     for i in mes[1:]:
         text += i + '\n'
         if i:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(settings.standart_delay)
             await mes.edit_text(text)
-    sleep(0.5)
+    sleep(settings.standart_delay)
     button = InlineKeyboardMarkup().add(InlineKeyboardButton('Записаться на Разбор', callback_data='Go_go-go'))
     await mes.edit_reply_markup(reply_markup=button)
     await mes.pin()
@@ -53,12 +55,12 @@ async def messaget_8(message: types.Message, state: FSMContext):
     await asyncio.sleep(2)
 
     mes = message_text.bonuses.split('\n')
-    text = mes[0] + '\n
+    text = mes[0] + '\n'
     mes = await message.answer(text)
     for i in mes[1:]:
         text += i + '\n'
         if i:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(settings.standart_delay)
             await mes.edit_text(text)
 
     await state.set_state(None)
@@ -80,13 +82,14 @@ async def question1(message: types.Message, state: FSMContext):
     await message.answer('<b>2/3. С каким чеком сейчас продаешь?</b>')
     await state.set_state(States.main_question2)
 
-@dp.message_handler(state=States.main_question1)
+
+@dp.message_handler(state=States.main_question2)
 async def question2(message: types.Message, state: FSMContext):
     await message.answer('<b>2/3. С каким чеком сейчас продаешь?</b>')
-    await state.set_state(States.main_question2)
+    await state.set_state(States.main_question3)
 
-@dp.message_handler(state=States.main_question1)
+
+@dp.message_handler(state=States.main_question3)
 async def question3(message: types.Message, state: FSMContext):
-    # АУДИО
-    pass
+    await bot.send_audio(chat_id=message.from_user.id, audio=InputFile(settings.audio3))
 
