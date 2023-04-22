@@ -1,3 +1,4 @@
+from .admin import dp
 from .message1 import dp
 from .message2 import dp
 from .message3 import dp
