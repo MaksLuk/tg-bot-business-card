@@ -3,7 +3,7 @@ import asyncio
 import os
 
 
-db_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'db', 'db.db')
+db_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'db.db')
 
 
 async def init_db():
