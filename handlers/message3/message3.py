@@ -24,6 +24,6 @@ async def click_continue2(callback: types.CallbackQuery, state: FSMContext):
     await message.edit_reply_markup(reply_markup=button)
     
     await asyncio.sleep(settings.guides_delay)
-    await callback.message.answer('Напиши сюда ключевое слово, которое было в конце статьи, и мы продолжим...')
-    await state.set_state(States.guide1)
+    await message.answer(message_text.text_question_1)
+    await state.set_state(States.question1)
     

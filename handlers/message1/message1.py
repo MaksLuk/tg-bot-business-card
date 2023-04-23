@@ -42,5 +42,6 @@ async def start(message: types.Message, state: FSMContext):
         
     new_joiner = await bot.send_message(chat_id=settings.admin_id, text=text)
     await state.update_data(message=new_joiner["message_id"])
+    await state.set_state(None)
 
 

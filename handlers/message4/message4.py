@@ -8,16 +8,6 @@ from handlers.message4 import message_text
 import settings
     
 
-@dp.message_handler(state=States.guide1)
-async def get_keyword_first(message: types.Message, state: FSMContext):
-    if message.text.strip().lower() != settings.answer1:
-        await message.answer('Поторопился, ввел неверно. Найди ключевое слово в конец статьи и попробуй еще раз')
-        return
-
-    await message.answer(message_text.text_question_1)
-    await state.set_state(States.question1)
-
-
 @dp.message_handler(state=States.question1)
 async def get_question_first(message: types.Message, state: FSMContext):
     if not message.text.strip().lower().replace('.', '') in settings.answer2:
