@@ -2,8 +2,8 @@ import os
 import emoji
 
 
-bot_token = '6292095984:AAEtTeZSom2dW6uIuEHdOjMWE341Wy5gI0w'
-admin_id = 236125284
+bot_token = 'aaaaaaaaaaaaa'
+admin_id = 7777
 
 
 dynamic_delay = 0.032
